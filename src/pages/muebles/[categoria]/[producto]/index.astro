@@ -42,7 +42,7 @@ interface Product {
     _type: "slug";
     current: string;
   };
-  categoria: {
+  category: {
     _type: "reference";
     _ref: string;
     slug: {
@@ -61,9 +61,9 @@ const { product } = Astro.props;
 const pageTitle: string = `${product.nombre} | ${SITE.title}`;
 
 export async function getStaticPaths() {
-  const categoryQuery = `*[_type == "producto"]{
+  const categoryQuery = `*[_type == "product_furniture"]{
     ...,
-    categoria-> {
+    category-> {
         slug
       }
   }`;
@@ -72,7 +72,7 @@ export async function getStaticPaths() {
   return categories.map((category: any) => {
     const data = {
       params: {
-        categoria: category.categoria.slug.current,
+        categoria: category.category.slug.current,
         producto: category.slug.current,
       },
       props: {
@@ -90,7 +90,7 @@ const carouselAlts = product.imagenes_adicionales
   : [];
 const whatsappMessage =
   whatsapplink +
-  `?text=Hola, me interesa el producto [${product.nombre}] de la categoría [${product.categoria.slug.current}]. ¿Me podrías dar más información?`;
+  `?text=Hola, me interesa el producto [${product.nombre}] de la categoría [${product.category.slug.current}]. ¿Me podrías dar más información?`;
 ---
 
 <MainLayout title={pageTitle}>
@@ -98,7 +98,7 @@ const whatsappMessage =
   </div>
 
   <section
-    class="mx-auto flex max-w-[85rem] flex-col px-4 py-10 sm:px-6 lg:px-8 lg:py-14 2xl:max-w-full"
+    class="mx-auto flex max-w-[85rem] min-h-[65dvh] flex-col px-4 py-10 sm:px-6 lg:px-8 lg:py-14 2xl:max-w-full"
   >
     <div
       class="flex flex-col items-center justify-around space-y-4 sm:flex-row sm:space-y-0"
@@ -116,7 +116,7 @@ const whatsappMessage =
       
       {
         product.imagenes_adicionales ? (
-          <div class="h-96 min-w-96 max-h-[500px] w-auto max-w-[500px]">
+          <div class="h-96 min-w-96 max-h-[500px] w-auto max-w-[500px] mx-auto">
             <Carousel src={[product.imagen, ...carouselImages]} alt={[product.alt, ...carouselAlts]} />
           </div>
         ) : (

@@ -29,7 +29,15 @@ const carouselAlt = [
 ];
 
 
-const categoryQuery = `*[_type == "categoria"] {
+const furnitureCategoryQuery = `*[_type == "category_furniture"] {
+  _id,
+  nombre,
+  imagen,
+  slug,
+  description,
+}`;
+
+const hardwareCategoryQuery = `*[_type == "category_hardware"] {
   _id,
   nombre,
   imagen,
@@ -46,7 +54,8 @@ const faqQuery = `*[_type == "pregunta"] {
   "a": respuesta
 }`;
 
-const categories = await sanityClient.fetch(categoryQuery);
+const furnitureCategories = await sanityClient.fetch(furnitureCategoryQuery);
+const hardwareCategories = await sanityClient.fetch(hardwareCategoryQuery);
 const landingData = await sanityClient.fetch(landingQuery);
 const faq = await sanityClient.fetch(faqQuery);
 
@@ -60,7 +69,7 @@ const landingImages = landingData.gallery.map((image: any) => {
   return urlForImage(image).url();
 });
 
-const categoryData: Item[] = categories.map((category: any) => {
+const furnitureCategoryData: Item[] = furnitureCategories.map((category: any) => {
   return {
     src: urlForImage(category.imagen).url(),
     alt: category.nombre,
@@ -69,6 +78,14 @@ const categoryData: Item[] = categories.map((category: any) => {
   };
 });
 
+const hardwareCategoryData: Item[] = hardwareCategories.map((category: any) => {
+  return {
+    src: urlForImage(category.imagen).url(),
+    alt: category.nombre,
+    title: category.nombre,
+    slug: category.slug.current,
+  };
+});
 
 ---
 
@@ -81,15 +98,15 @@ const categoryData: Item[] = categories.map((category: any) => {
   <HeroSection
     title={`Dale un toque único a tus espacios con <span class="text-yellow-500 dark:text-yellow-400">Famago</span>`}
     subTitle="Muebles de diseño industrial de alta calidad, ideales para el hogar y la oficina, fabricados con orgullo en Chile."
-    primaryBtn="Explorar Productos"
+    primaryBtn="Explorar Muebles"
     primaryBtnURL="/productos"
     secondaryBtn="Contactactanos"
     secondaryBtnURL="/contacto"
     src={landingImages}
     alt={carouselAlt}
   />
-  <Categories data={categoryData} />
+  <Categories  subtitle="Encuentra una amplia variedad de muebles para cada espacio de tu hogar." basePath="muebles" title="Muebles" data={furnitureCategoryData} />
+  <Categories  subtitle="Todo lo que necesitas para proyectos de construcción y reparación." basePath="ferreteria"  title="Ferreteria" data={hardwareCategoryData} />
   <FeaturesGeneral data={features} />
-
   <FAQ faqs={faqs} />
 </MainLayout>

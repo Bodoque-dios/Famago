@@ -1,13 +1,10 @@
 ---
 // Importing necessary components
 import MainLayout from "@/layouts/MainLayout.astro";
-import PrimaryCTA from "@components/ui/buttons/PrimaryCTA.astro";
 import CardSmall from "@components/ui/cards/CardSmall.astro";
-import CardWide from "@components/ui/cards/CardWide.astro";
 
 // Importing necessary functions from Astro
-import { getCollection } from "astro:content";
-import type { CollectionEntry } from "astro:content";
+
 import { SITE } from "@data/constants";
 import { sanityClient } from "sanity:client";
 import { urlForImage } from "@/sanity/lib/urlForImage";
@@ -21,8 +18,7 @@ interface productCategory {
   categorySlug: string;
 }
 
-
-const categoryQuery = `*[_type == "categoria"] {
+const categoryQuery = `*[_type == "category_furniture"] {
   _id,
   nombre,
   imagen,
@@ -45,11 +41,11 @@ const categories: productCategory[] = categoriesResult.map((category: any) => {
 });
 
 // Define variables for page content
-const title: string = "Productos";
+const title: string = "Muebles";
 const subTitle: string =
   "Explora la durabilidad y precisión de los productos de Famago, diseñados tanto para profesionales como para entusiastas. Cada uno de nuestros muebles está fabricado con precisión y construido para durar, asegurando que tengas el mueble adecuado para cada espacio.";
 
-const pageTitle: string = `Productos | ${SITE.title}`;
+const pageTitle: string = `Muebles | ${SITE.title}`;
 ---
 
 <MainLayout
@@ -57,9 +53,9 @@ const pageTitle: string = `Productos | ${SITE.title}`;
   structuredData={{
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "@id": "https://famago.cl/productos",
-    url: "https://famago.cl/productos",
-    name: "Productos | Famago",
+    "@id": "https://famago.cl/muebles",
+    url: "https://famago.cl/muebles",
+    name: "Muebles | Famago",
     description:
       "Descubre la calidad y artesanía de los muebles estilo industriales de Famago, diseñados tanto para espacios comerciales como residenciales.",
     isPartOf: {
@@ -73,7 +69,7 @@ const pageTitle: string = `Productos | ${SITE.title}`;
   }}
 >
   <div
-    class="mx-auto max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 2xl:max-w-full"
+    class="mx-auto min-h-[70vh] max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 2xl:max-w-full"
   >
     <div class="mb-4 flex items-center justify-between gap-8 sm:mb-8 md:mb-12">
       <div class="flex items-center gap-12">
@@ -91,11 +87,15 @@ const pageTitle: string = `Productos | ${SITE.title}`;
         }
       </div>
     </div>
-  
-    <section class="grid grid-cols-1 gap-4 md:grid-cols-3 sm:grid-cols-2 md:gap-6 xl:gap-8">
+
+    <section
+      class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 xl:gap-8"
+    >
       {
         categories.map((product, index) => {
-          return <CardSmall product={product} isCategory={true}  />;
+          return (
+            <CardSmall product={product} basePath="muebles" isCategory={true} />
+          );
         })
       }
     </section>

@@ -1,7 +1,8 @@
 
 const navBarLinks = [
   { name: "Inicio", url: "/" },
-  { name: "Productos", url: "/productos" },
+  { name: "Muebles", url: "/muebles" },
+  { name: "Ferretería", url: "/ferreteria" },
   { name: "Muebles a pedido", url: "/muebles-a-pedido" },
   /*{ name: "Blog", url: "/blog" },*/
   { name: "Contacto", url: "/contacto" },
@@ -11,7 +12,8 @@ const footerLinks = [
   {
     section: "Tienda",
     links: [
-      { name: "Productos", url: "/productos" },
+      { name: "Muebles", url: "/muebles" },
+      {name: "Ferretería", url:"/ferreteria"},
      // { name: "Comedores", url: "/products" },
      // { name: "Oficina", url: "/services" },
     ],
