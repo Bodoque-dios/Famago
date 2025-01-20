@@ -3,7 +3,7 @@
 import { Image } from "astro:assets";
 import Icon from "@components/ui/icons/Icon.astro";
 
-const { product, isCategory} = Astro.props;
+const { product, isCategory, basePath} = Astro.props;
 interface productCategory {
   _id: string;
   nombre: string;
@@ -17,6 +17,7 @@ interface productCategory {
 interface Props {
   product: productCategory;
   isCategory?: boolean;
+  basePath: string;
 }
 
 // Define classes to be used with the Image component
@@ -26,7 +27,7 @@ const imageClass =
 
 <!-- A clickable card that leads to the details of the product-->
 <a
-  href={ isCategory ? `/productos/${product.categorySlug}`: `/productos/${product.categorySlug}/${product.slug}/`}
+  href={ isCategory ? `/${basePath}/${product.categorySlug}`: `/${basePath}/${product.categorySlug}/${product.slug}/`}
   data-astro-prefetch
   class="group relative flex h-48 items-end overflow-hidden rounded-xl shadow-lg outline-none ring-zinc-500 focus-visible:ring dark:ring-zinc-200 dark:focus:outline-none md:h-80"
 >

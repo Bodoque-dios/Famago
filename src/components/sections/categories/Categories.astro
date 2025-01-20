@@ -9,11 +9,12 @@ interface Item {
 }
 interface Props {
   data: Item[];
+  basePath: string;
   title: string;
   subtitle: string;
 }
 
-const { data, title, subtitle } = Astro.props;
+const { data,basePath ,title, subtitle } = Astro.props;
 
 const chunk = (arr: any[], cols: number): any[][] => {
   const newArray: any[][] = Array.from({ length: cols }, () => []);
@@ -43,7 +44,7 @@ const cols2 = chunk(data, 2);
         cols3.map((col: any[]) => (
           <div class="hidden space-y-2 lg:block">
             {col.map((item: Item) => (
-              <Category data={item} />
+              <Category basePath={basePath} data={item} />
             ))}
           </div>
         ))
@@ -52,13 +53,13 @@ const cols2 = chunk(data, 2);
         cols2.map((col: any[]) => (
           <div class="space-y-2 hidden sm:block lg:hidden">
             {col.map((item: Item) => (
-              <Category data={item} />
+              <Category basePath={basePath} data={item} />
             ))}
           </div>
         ))
       }
       <div class="sm:hidden space-y-2">
-        {data.map((item: Item) => <Category data={item} />)}
+        {data.map((item: Item) => <Category  basePath={basePath} data={item} />)}
       </div>
     </div>
   </div>

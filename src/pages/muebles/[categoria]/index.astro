@@ -31,29 +31,29 @@ interface productCategory {
 }
 // This gets the static paths for all the unique products
 /**
- * 
+ *
  */
 export async function getStaticPaths() {
-  const categoryQuery = `*[_type == "categoria"]`;
+  const categoryQuery = `*[_type == "category_furniture"]`;
 
   const categories = await sanityClient.fetch(categoryQuery);
   return categories.map((category: any) => {
     return {
       params: { categoria: category.slug.current },
-      props: {category },
+      props: { category },
     };
   });
 }
 
 const { category } = Astro.props;
-const productsQuery = `*[_type == "producto" && categoria._ref == $categoryId] {
+const productsQuery = `*[_type == "product_furniture" && category._ref == $categoryId] {
   _id,
   nombre,
   imagen,
   slug,
   descripcion,
   alt,
-  categoria->{
+  category->{
     slug
   }
 }`;
@@ -70,10 +70,9 @@ const products = productsResult.map((product: any) => {
     slug: product.slug.current,
     description: product.nombre,
     alt: product.alt ?? product.descripcion,
-    categorySlug: product.categoria.slug.current,
+    categorySlug: product.category.slug.current,
   };
 });
-
 
 const pageTitle: string = `${category.nombre} | ${SITE.title}`;
 ---
@@ -99,22 +98,25 @@ const pageTitle: string = `${category.nombre} | ${SITE.title}`;
       </div>
     </div>
 
-    <div
-      class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 xl:gap-8"
-    >
-      {
-        products.length > 0 ? (
-          products.map((product: any) => {
-            return <CardSmall product={product} />;
-          })
-        ) : (
+    {
+      products.length > 0 ? (
+        <>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 xl:gap-8">
+            {products.map((product: any) => {
+              return <CardSmall basePath="muebles" product={product} />;
+            })}
+          </div>
+        </>
+      ) : (
+        <div class="m-4 flex flex-col items-center justify-center gap-12">
           <p class="col-span-3 text-center text-lg font-medium text-neutral-600 dark:text-neutral-400">
-            Lo sentimos, no hay productos disponibles en esta categoría actualmente. Si deseas un mueble personalizado, por favor contáctanos por Whatsapp o correo electrónico.
+            Lo sentimos, no hay productos disponibles en esta categoría
+            actualmente. Si deseas un mueble personalizado, por favor
+            contáctanos por Whatsapp o correo electrónico.
           </p>
-          <br />
           <PrimaryCTA url="/contacto" title="Contáctanos" />
-        )
-      }
-    </div>
+        </div>
+      )
+    }
   </section>
 </MainLayout>

@@ -1,0 +1,115 @@
+---
+// Importing necessary components
+import MainLayout from "@/layouts/MainLayout.astro";
+import CardSmall from "@components/ui/cards/CardSmall.astro";
+
+// Importing necessary functions from Astro
+import { SITE } from "@data/constants";
+import { sanityClient } from "sanity:client";
+import { urlForImage } from "@/sanity/lib/urlForImage";
+interface productCategory {
+  _id: string;
+  nombre: string;
+  imagen: string;
+  slug: string;
+  description: string;
+  alt: string;
+  categorySlug: string;
+}
+
+const categoryQuery = `*[_type == "category_hardware"] {
+  _id,
+  nombre,
+  imagen,
+  slug,
+  descripcion,
+  alt
+}`;
+const categoriesResult = await sanityClient.fetch(categoryQuery);
+
+const categories: productCategory[] = categoriesResult.map((category: any) => {
+  return {
+    _id: category._id,
+    nombre: category.nombre,
+    imagen: urlForImage(category.imagen).url(),
+    slug: category.slug.current,
+    description: category.descripcion,
+    alt: category.alt,
+    categorySlug: category.slug.current,
+  };
+});
+
+// Define variables for page content
+const title: string = "Ferretería";
+const subTitle: string =
+  "Descubre la durabilidad y precisión de nuestros productos, ideales tanto para profesionales como para entusiastas. Cada artículo está fabricado con esmero y diseñado para ofrecer un rendimiento duradero, asegurando que encuentres la herramienta perfecta para cada proyecto.";
+
+const pageTitle: string = `Ferretería | ${SITE.title}`;
+---
+
+<MainLayout
+  title={pageTitle}
+  structuredData={{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://famago.cl/ferreteria",
+    url: "https://famago.cl/ferreteria",
+    name: "Ferretería | Famago",
+    description:
+      "Explora nuestra amplia gama de artículos de ferretería, creados para ofrecer calidad y resistencia en proyectos comerciales y residenciales, con el respaldo de la mejor artesanía y tecnología.",
+    isPartOf: {
+      "@type": "WebSite",
+      url: "https://famago.cl",
+      name: "Famago",
+      description:
+        "Famago ofrece muebles de diseño industrial de alta calidad, ideales para el hogar y espacios comerciales. Descubre nuestra colección de mesas, sillas, estanterías y más.",
+    },
+    inLanguage: "es-CL",
+  }}
+>
+  <div
+    class="mx-auto min-h-[70vh] max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 2xl:max-w-full"
+  >
+    <div class="mb-4 flex items-center justify-between gap-8 sm:mb-8 md:mb-12">
+      <div class="flex items-center gap-12">
+        <h1
+          class="text-balance text-2xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200 md:text-4xl md:leading-tight"
+        >
+          {title}
+        </h1>
+        {
+          subTitle && (
+            <p class="hidden max-w-screen-sm text-pretty text-neutral-600 dark:text-neutral-400 md:block">
+              {subTitle}
+            </p>
+          )
+        }
+      </div>
+    </div>
+
+    <section
+      class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6 xl:gap-8"
+    >
+      {
+        categories.map((product, index) => {
+          return (
+            <CardSmall
+              product={product}
+              basePath="ferreteria"
+              isCategory={true}
+            />
+          );
+        })
+      }
+    </section>
+  </div>
+  {
+    /*
+  <!--Testimonials section-->
+  <TestimonialsSectionAlt
+  title="What Our Customers Say"
+  testimonials={testimonials}
+  />
+   */
+  }
+</MainLayout>
